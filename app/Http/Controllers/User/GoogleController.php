@@ -48,8 +48,16 @@ class GoogleController extends Controller
                 $calendar->setTimeZone(config('app.timezone'));
                 $createdCalendar = $service->calendars->insert($calendar);
 
-                $user->google_calendar_id = $createdCalendar->getId();
+                //Created calendar public
+                $rule = new \Google_Service_Calendar_AclRule();
+                $scope = new \Google_Service_Calendar_AclRuleScope();
+                $scope->setType('default');
+                $scope->setValue('');
+                $rule->setScope($scope);
+                $rule->setRole('reader');
+                $service->acl->insert($createdCalendar->getId(), $rule);
 
+                $user->google_calendar_id = $createdCalendar->getId();
                 $user->save();
             }
 
