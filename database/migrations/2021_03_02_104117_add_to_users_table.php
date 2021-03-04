@@ -46,4 +46,4 @@ class AddToUsersTable extends Migration
             $table->dropColumn('google_expires_in');
         });
     }
-}~
+}
