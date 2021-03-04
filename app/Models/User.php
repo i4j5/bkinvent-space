@@ -26,9 +26,12 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 
-        'extension_phone_number', 'amo_user_id', 'asana_user_id', 'uis_user_id',
-        'google_access_token', 'google_refresh_token', 'google_expires_in', 'google_calendar_id',
+        'name', 'email', 'password',
+        'extension_phone_number', 
+        'google_calendar_id',
+        'amo_user_id', 
+        'asana_user_id',
+        'uis_user_id',
     ];
 
     /**
@@ -41,6 +44,9 @@ class User extends Authenticatable
         'remember_token',
         'two_factor_recovery_codes',
         'two_factor_secret',
+        'google_access_token', 
+        'google_refresh_token', 
+        'google_expires_in',
     ];
 
     /**

@@ -21,22 +21,31 @@ class GetUserGoogleClientActions
     {
 
         $json_token = [
-            'access_token' => $user->google_access_token,
-            'refresh_token' => $user->google_refresh_token,
-            'expires_in' => $user->google_expires_in,
+            'access_token' => $user->google_access_token ? $user->google_access_token : '',
+            'refresh_token' => $user->google_refresh_token? $user->google_refresh_token : '',
+            'expires_in' => $user->google_expires_in ? $user->google_expires_in : 0,
         ];
 
-        $this->client->setAccessToken($json_token);
+        if (
+            $json_token['access_token'] && 
+            $json_token['refresh_token'] && 
+            $json_token['expires_in']
+        ){
+            $this->client->setAccessToken($json_token);
 
-
-        if ($this->client->isAccessTokenExpired()) {
-            $json_token = $this->client->refreshToken($this->client->getRefreshToken());
-
-            $user->google_access_token = $json_token['access_token'];
-            $user->google_refresh_token = $json_token['refresh_token'];
-            $user->google_expires_in = $json_token['expires_in'];
-            $user->save();
-
+            if ($this->client->isAccessTokenExpired()) {
+                $json_token = $this->client->refreshToken($this->client->getRefreshToken());
+    
+                if (isset($res['error'])) {
+                    return false;
+                }
+    
+                $user->google_access_token = $json_token['access_token'];
+                $user->google_refresh_token = $json_token['refresh_token'];
+                $user->google_expires_in = $json_token['expires_in'];
+                $user->save();
+    
+            }
         }
 
         return  $this->client;
