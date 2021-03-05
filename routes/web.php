@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/login');
 });
 
 
@@ -25,3 +25,4 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 
 
 Route::get('login/google/callback', 'User\GoogleController@callback')->name('login.google.callback');
+Route::get('calendar-list', 'User\GoogleController@calendarList')->name('google.calendar.list');

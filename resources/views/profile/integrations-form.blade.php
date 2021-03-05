@@ -4,12 +4,12 @@
     </x-slot>
 
     <x-slot name="description">
-        Описание
+        <!-- Описание -->
     </x-slot>
 
     <x-slot name="content">
         <div class="max-w-xl text-sm text-gray-600">
-            текст
+            Доступные интеграции
         </div>
 
         <div class="flex items-center mt-5">

@@ -69,6 +69,11 @@ class GoogleController extends Controller
 
     }
 
-    // private function creaale
-    
+    public function calendarList() {
+
+        $users = User::where('google_calendar_id', '!=', '')->get();
+
+        return view('google.list')->with('users', $users);
+    }
+
 }
