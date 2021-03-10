@@ -47,6 +47,9 @@ class User extends Authenticatable
         'google_access_token', 
         'google_refresh_token', 
         'google_expires_in',
+        'asana_access_token', 
+        'asana_refresh_token', 
+        'asana_expires_in',
     ];
 
     /**
