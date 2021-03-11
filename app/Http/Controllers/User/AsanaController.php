@@ -25,6 +25,7 @@ class AsanaController extends Controller
         
         $client = $this->asanaClient->execute($user);
 
+
         if ($request->get('code')) {
            
             try {
@@ -32,6 +33,7 @@ class AsanaController extends Controller
                 $user->asana_access_token = $client->dispatcher->accessToken;
                 $user->asana_refresh_token = $client->dispatcher->refreshToken;
                 $user->asana_expires_in = $client->dispatcher->expiresIn;
+                $user->asana_user_id = $client->users->me()->gid;
                 $user->save();
             } catch (\ErrorException $e) {
                 dd('Error: ' . $e->getMessage());

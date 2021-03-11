@@ -10,6 +10,7 @@ class GetUserGoogleClientActions
     public function __construct()
     {
         $this->client = new \Google_Client();
+        $this->client->setApplicationName(env('APP_NAME'));
         $this->client->setClientId(env('GOOGLE_CLIENT_ID'));
         $this->client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
         $this->client->setRedirectUri(env('GOOGLE_REDIRECT_URI'));

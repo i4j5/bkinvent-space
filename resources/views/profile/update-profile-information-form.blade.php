@@ -72,7 +72,7 @@
             <x-jet-input-error for="extension_phone_number" class="mt-2" />
         </div>
 
-        <div class="col-span-6 sm:col-span-4">
+        <!-- <div class="col-span-6 sm:col-span-4">
             <x-jet-label for="amo_user_id" value="amo_id" />
             <x-jet-input id="amo_user_id" type="text" class="mt-1 block w-full" wire:model.defer="state.amo_user_id" autocomplete="amo_user_id" />
             <x-jet-input-error for="amo_user_id" class="mt-2" />
@@ -94,7 +94,7 @@
             <x-jet-label for="google_calendar_id" value="google_calendar_id" />
             <x-jet-input id="google_calendar_id" type="text" class="mt-1 block w-full" wire:model.defer="state.google_calendar_id" autocomplete="google_calendar_id" />
             <x-jet-input-error for="google_calendar_id" class="mt-2" />
-        </div>
+        </div> -->
 
     </x-slot>
 
