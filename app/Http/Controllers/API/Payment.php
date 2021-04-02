@@ -33,13 +33,20 @@ class Payment extends Controller
      */
     public function store(Request $request)
     {
-        $dd = \App\Models\Payment::create([
+
+        if (!$request->sum) {
+            return false;
+        }
+
+        $payment = \App\Models\Payment::create([
             'type' => $request->type,
             'deal_id' => $request->deal_id,
             'sum' => $request->sum,
-            'date' => Carbon::createFromFormat('d.m.Y H:i', $request->date,),
-            'description' => $request->description
+            'date' => Carbon::createFromFormat('d.m.Y H:i', $request->date),
+            'description' => $request->description ? $request->description : ''
         ]);
+
+        return $payment;
     }
 
     /**
