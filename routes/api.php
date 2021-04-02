@@ -22,3 +22,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('add-google-calendar-event', 'API\AddGoogleCalendarEventController');
+
+Route::get('payment', 'API\Payment@index');
+Route::post('payment', 'API\Payment@store');
+Route::get('payment/{id}', 'API\Payment@show');
+Route::delete('payment/{id}', 'API\Payment@destroy');
