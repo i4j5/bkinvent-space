@@ -27,3 +27,16 @@ Route::get('payment', 'API\Payment@index');
 Route::post('payment', 'API\Payment@store');
 Route::get('payment/{id}', 'API\Payment@show');
 Route::delete('payment/{id}', 'API\Payment@destroy');
+
+
+Route::post('add-google-calendar-event', 'API\AddGoogleCalendarEventController');
+
+Route::get('connection-amocrm', 'API\ConnectionAmoCRMController');
+
+Route::get('webhook/amocrm-closing-lead', 'Webhooks\AmoCRMClosingLeadController');
+
+
+Route::post('google-drive/create-project-folder', 'API\GoogleDriveFoldersController@CreateProjectFolder');
+// Route::get('google-drive/create-client-folder', 'API\GoogleDriveFoldersController@CreateСlientFolder');
+Route::post('google-drive/rename-project-folder', 'API\GoogleDriveFoldersController@RenameProjectFolder');
+Route::post('google-drive/rename-client-folder', 'API\GoogleDriveFoldersController@RenameСlientFolder');

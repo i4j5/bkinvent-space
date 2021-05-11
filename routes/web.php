@@ -29,5 +29,4 @@ Route::get('calendar-list', 'User\GoogleController@calendarList')->name('google.
 
 Route::get('login/asana/callback', 'User\AsanaController@callback')->name('login.asana.callback');
 
-// Route::get('login/amocrm/callback', 'User\AsanaController@callback')->name('login.amocrm.callback');
 
