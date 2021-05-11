@@ -288,8 +288,8 @@ class GoogleDriveFoldersController extends Controller
             if ($folder->name != $new_name) {
                 $this->RenameFile($folder_id, $new_name );
             }
-        }
 
+        }
 
 
 
