@@ -265,7 +265,7 @@ class GoogleDriveFoldersController extends Controller
         $name =  $contacts['update'][0]['name'];
         $custom_fields =  $contacts['update'][0]['custom_fields'];
 
-        $folder_id = null
+        $folder_id = null;
 
         foreach ($custom_fields as $field) {
             switch ($field['id']) {
