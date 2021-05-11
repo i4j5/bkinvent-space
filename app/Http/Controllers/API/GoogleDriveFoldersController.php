@@ -273,7 +273,7 @@ class GoogleDriveFoldersController extends Controller
                     $folder_id = explode("?id=", $field['values'][0]['value'])[1]; 
                     break;
                 case '509703': 
-                    $folder_id = $field['values'][0]['value'];
+                    $folder_id = explode("?id=", $field['values'][0]['value'])[1]; 
                     break;
                 default: break;
             }
@@ -343,10 +343,10 @@ class GoogleDriveFoldersController extends Controller
 
         foreach ($custom_fields as $field) {
             switch ($field['id']) {
-                case '509647': 
+                case '75429': 
                     $folder_id = explode("?id=", $field['values'][0]['value'])[1]; 
                     break;
-                case '75429': 
+                case '509647':
                     $fshortcut_id = $field['values'][0]['value'];
                     break;
                 default: break;
