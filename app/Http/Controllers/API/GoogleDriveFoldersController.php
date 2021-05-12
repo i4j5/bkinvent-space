@@ -76,6 +76,8 @@ class GoogleDriveFoldersController extends Controller
         $amoCRMClientFolderGoogleDrive = null;
         $amoCRMClientFolderGoogleDriveProjects = null;
 
+
+
         if ($client) {
 
             foreach ($clientFields as $field) {
@@ -122,6 +124,8 @@ class GoogleDriveFoldersController extends Controller
 
             }
             
+        } else {
+            return 'error';
         }
 
         $clientLink = false;
@@ -183,7 +187,6 @@ class GoogleDriveFoldersController extends Controller
         $lead_data = [
             'custom_fields_values' => []
         ];
-
 
         // TODO: Проверка пустые поля или нет!
 
@@ -323,16 +326,16 @@ class GoogleDriveFoldersController extends Controller
             $folder = $this->serviceGoogleDrive->files->get($folder_id);
 
             if ($folder->name != $new_name) {
-                $this->RenameFile($folder_id, $new_name );
-                $this->RenameFile($fshortcut_id, $new_name );
+                $this->RenameFile($folder_id, $new_name);
+                if ($fshortcut_id) {
+                    $this->RenameFile($fshortcut_id, $new_name);
+                }
             }
         }
 
         return 'ok';
         
     }
-
-
 
     private function CreateFolder($parent_id, $name) {
 
