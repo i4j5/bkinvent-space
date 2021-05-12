@@ -147,6 +147,8 @@ class GoogleDriveFoldersController extends Controller
         if (!$clientLink and !$clientProjectsLink) {
             $client_folder = $this->CreateFolder(env('GOOGLE_USERS_FOLDER_ID'), "$client->name #$client->id");
             $client_folder__projects = $this->CreateFolder($client_folder->id, '1.1 ПРОЕКТЫ');
+            $this->CreateFolder($client_folder->id, '1.2 ДОКУМЕНТЫ');
+            
 
             $clientLink = "https://drive.google.com/open?id=$client_folder->id";
             $clientProjectsLink = "https://drive.google.com/open?id=$client_folder__projects->id";
