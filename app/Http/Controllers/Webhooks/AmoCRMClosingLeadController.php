@@ -24,8 +24,7 @@ class AmoCRMClosingLeadController extends Controller
 
     public function __invoke(Request $request) {
 
-        // $lead_id = $request->input('leads')['status'][0]['id'];
-        $lead_id = 20040247;
+        $lead_id = $request->input('leads')['status'][0]['id'];
 
         $fields = [];
         for ($i=0, $run=true; $run ; $i++) { 
