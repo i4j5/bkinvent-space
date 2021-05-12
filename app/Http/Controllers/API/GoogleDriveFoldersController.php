@@ -28,7 +28,6 @@ class GoogleDriveFoldersController extends Controller
     public function CreateProjectFolder(Request $request) {
 
         $lead_id = $request->input('id');
-        // $lead_id = 20040247;
 
         $lead = $this->amoCRM->execute("/api/v4/leads/$lead_id?with=contacts");
 
@@ -246,8 +245,8 @@ class GoogleDriveFoldersController extends Controller
         ];
 
         $this->amoCRM->execute("/api/v4/leads/$lead_id", 'patch', $lead_data);
-        
-        dd($lead, $client, $client_folder, $client_folder__projects);
+    
+        return 'ok';
 
     }
 
@@ -259,11 +258,10 @@ class GoogleDriveFoldersController extends Controller
 
 
         $contacts = $request->input('contacts');
-        // $companies = $request->input('companies');
 
         $id =  $contacts['update'][0]['id'];
-        $name =  $contacts['update'][0]['name'];
-        $custom_fields =  $contacts['update'][0]['custom_fields'];
+        $name = isset($contacts['update'][0]['name']) ? $contacts['update'][0]['name'] : '';
+        $custom_fields = isset($contacts['update'][0]['custom_fields']) ? $contacts['update'][0]['custom_fields'] : [];
 
         $folder_id = null;
 
@@ -291,41 +289,6 @@ class GoogleDriveFoldersController extends Controller
 
         }
 
-
-
-        // $client_id = 25146889;
-
-        // $type = $request->query('type', false);
-
-        // switch ($type) {
-        //     case 'company': 
-        //         $client = $this->amoCRM->execute("/api/v4/companies/$client_id");
-        //         break;
-        //     case 'contact': 
-        //         $client = $this->amoCRM->execute("/api/v4/contacts/$client_id");
-        //         break;
-        //     default: 
-        //         return 'error';
-        //         break;
-        // }
-
-        // $name = "$client->name #$client->id";
-
-        // $folder_id = null;
-
-        // if ( isset($client->custom_fields_values) ) {
-        //     foreach ($client->custom_fields_values as $field) {
-        //         switch ($field->field_code) {
-        //             case 'FOLDER_GOOGLE_DRIVE': 
-        //                 $folder_id = explode("?id=", $field->values[0]->value)[1]; 
-        //                 break;
-        //             default: break;
-        //         }
-        //     }
-        // }
-
-        // $this->RenameFile($folder_id, $name);
-
         return 'ok';
 
     }
@@ -335,8 +298,8 @@ class GoogleDriveFoldersController extends Controller
         $lead = $request->input('leads');
 
         $id =  $lead['update'][0]['id'];
-        $name =  $lead['update'][0]['name'];
-        $custom_fields =  $lead['update'][0]['custom_fields'];
+        $name =  isset($lead['update'][0]['name']) ? $lead['update'][0]['name'] : '';
+        $custom_fields = isset($lead['update'][0]['custom_fields']) ? $lead['update'][0]['custom_fields'] : [];
 
         $folder_id = null;
         $fshortcut_id = null;
@@ -364,29 +327,6 @@ class GoogleDriveFoldersController extends Controller
                 $this->RenameFile($fshortcut_id, $new_name );
             }
         }
-
-        // $lead = $this->amoCRM->execute("/api/v4/leads/$lead_id");
-
-        // $name = "$lead->name #$lead->id";
-
-        // $folder_id = null;
-        // $fshortcut_id = null;
-
-        // if ( isset($lead->custom_fields_values) ) {
-        //     foreach ($lead->custom_fields_values as $field) {
-               
-        //         if ($field->field_id == 75429) {
-        //             $folder_id = explode("?id=", $field->values[0]->value)[1];
-
-        //             $this->RenameFile($folder_id, $name);
-
-        //         } else if ($field->field_id == 509647) {
-        //             $fshortcut_id = $field->values[0]->value;
-
-        //             $this->RenameFile($fshortcut_id, $name);
-        //         }
-        //     }
-        // }
 
         return 'ok';
         
