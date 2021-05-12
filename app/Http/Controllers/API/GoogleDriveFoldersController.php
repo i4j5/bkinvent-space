@@ -343,7 +343,7 @@ class GoogleDriveFoldersController extends Controller
 
         $folder = new \Google_Service_Drive_DriveFile([
             'parents' => [$parent_id],
-            'name' => $name,
+            'name' => str_replace('"', "'", $name),
             'mimeType' => 'application/vnd.google-apps.folder'
         ]);
 
@@ -355,7 +355,7 @@ class GoogleDriveFoldersController extends Controller
 
         $shortcut = new \Google_Service_Drive_DriveFile([
             'parents' => [$parent_id],
-            'name' => $name,
+            'name' => str_replace('"', "'", $name),
             'shortcutDetails' => [
                 'targetId' => $folder_id
             ],
@@ -367,7 +367,7 @@ class GoogleDriveFoldersController extends Controller
 
     private function RenameFile($file_id, $name) {
         $file = new \Google_Service_Drive_DriveFile();
-        $file->setName($name);
+        $file->setName( str_replace('"', "'", $name) );
         return $this->serviceGoogleDrive->files->update($file_id, $file); 
     }
 }
