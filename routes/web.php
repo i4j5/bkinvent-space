@@ -28,5 +28,6 @@ Route::get('login/google/callback', 'User\GoogleController@callback')->name('log
 Route::get('calendar-list', 'User\GoogleController@calendarList')->name('google.calendar.list');
 
 Route::get('login/asana/callback', 'User\AsanaController@callback')->name('login.asana.callback');
+Route::get('login/amocrm/callback', 'User\AmoCRMController@callback')->name('login.amocrm.callback');
 
 

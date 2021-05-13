@@ -50,6 +50,9 @@ class User extends Authenticatable
         'asana_access_token', 
         'asana_refresh_token', 
         'asana_expires_in',
+        'amocrm_access_token',
+        'amocrm_refresh_token',
+        'amocrm_expires_in',
     ];
 
     /**

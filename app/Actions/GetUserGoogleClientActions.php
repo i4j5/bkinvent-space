@@ -31,7 +31,7 @@ class GetUserGoogleClientActions
             $json_token['access_token'] && 
             $json_token['refresh_token'] && 
             $json_token['expires_in']
-        ){
+        ) {
             $this->client->setAccessToken($json_token);
 
             if ($this->client->isAccessTokenExpired()) {

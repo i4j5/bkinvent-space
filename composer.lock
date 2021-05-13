@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f79dcd51a2b3e4a0e72a1c41d09da655",
+    "content-hash": "f49406f3e5e9665b10280908b6aefe8d",
     "packages": [
         {
             "name": "adoy/oauth2",
@@ -49,6 +49,61 @@
                 "source": "https://github.com/adoy/PHP-OAuth2/tree/1.3.0"
             },
             "time": "2015-08-03T19:57:06+00:00"
+        },
+        {
+            "name": "amocrm/oauth2-amocrm",
+            "version": "2.0.8",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/amocrm/amocrm-oauth-client.git",
+                "reference": "fd3162225cfb3b556ba4bfd9e8dd61c089277182"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/amocrm/amocrm-oauth-client/zipball/fd3162225cfb3b556ba4bfd9e8dd61c089277182",
+                "reference": "fd3162225cfb3b556ba4bfd9e8dd61c089277182",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "league/oauth2-client": "2.6.*",
+                "php": ">=7.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.5",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "AmoCRM\\OAuth2\\Client\\Provider\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nikita Bessudnov",
+                    "email": "nbessudnov@team.amocrm.com",
+                    "homepage": "https://github.com/bessudnov"
+                }
+            ],
+            "description": "amoCRM OAuth 2.0 Client Provider for The PHP League OAuth2-Client",
+            "keywords": [
+                "amoCRM",
+                "authorisation",
+                "authorization",
+                "client",
+                "oauth",
+                "oauth2"
+            ],
+            "support": {
+                "issues": "https://github.com/amocrm/amocrm-oauth-client/issues",
+                "source": "https://github.com/amocrm/amocrm-oauth-client/tree/2.0.8"
+            },
+            "time": "2021-01-13T22:59:28+00:00"
         },
         {
             "name": "asana/asana",

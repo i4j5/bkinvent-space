@@ -31,8 +31,6 @@ Route::delete('payment/{id}', 'API\Payment@destroy');
 
 Route::post('add-google-calendar-event', 'API\AddGoogleCalendarEventController');
 
-Route::get('connection-amocrm', 'API\ConnectionAmoCRMController');
-
 Route::get('webhook/amocrm-closing-lead', 'Webhooks\AmoCRMClosingLeadController');
 
 

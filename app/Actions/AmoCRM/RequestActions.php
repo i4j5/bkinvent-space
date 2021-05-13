@@ -2,30 +2,26 @@
 
 namespace App\Actions\AmoCRM;
 
-use App\Servises\AmoCRMClient;
-use App\Actions\AmoCRM\GetTokenActions;
-use App\Actions\AmoCRM\RefreshTokenActions;
+use App\Actions\AmoCRM\GetUserAmoCRMTokenActions;
 use Curl\Curl;
+use App\Models\User;
 
 class RequestActions
 {
     public function execute($url = '', $method = 'get', $data =[])
     {
-        $accessToken = (new GetTokenActions)->execute();
+
+        $user = User::where('email', env('ROOT_EMAIL'))->first();
+
+        $token = (new GetUserAmoCRMTokenActions)->execute($user);
 
         $request = new Curl('https://' . env('AMO_DOMAIN') . '.amocrm.ru');
         
-        $request->setHeader('Authorization', 'Bearer ' . $accessToken);
+        $request->setHeader('Authorization', 'Bearer ' . $token);
         $request->setHeader('Content-Type', 'application/json');
 
         $res = $request->{$method}($url, $data);
 
-        if (isset($res->response->error)) {
-            $newAccessToken = (new RefreshTokenActions)->execute();
-            $request->setHeader('Authorization', 'Bearer ' . $newAccessToken);
-            $res = $request->{$method}($url, $data);
-        }
-        
         return $res;
     }
 }

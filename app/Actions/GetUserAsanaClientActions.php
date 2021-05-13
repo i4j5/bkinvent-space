@@ -14,7 +14,6 @@ class GetUserAsanaClientActions
         $access_token = $user->asana_access_token;
         $refresh_token = $user->asana_refresh_token;
 
-
         $client;
 
         if ($access_token && $refresh_token) {
@@ -25,7 +24,6 @@ class GetUserAsanaClientActions
                 'token' =>  $access_token,
                 'refresh_token' => $refresh_token
             ));
-
 
             try {
                 $client->users->me();
@@ -39,7 +37,6 @@ class GetUserAsanaClientActions
                     $user->save();
 
                 } catch (\ErrorException $e) {
-                    // dd('Error: ' . $e->getMessage());
                     $client = Client::oauth(array(
                         'client_id'     => env('ASANA_CLIENT_ID'),
                         'client_secret' => env('ASANA_CLIENT_SECRET'),

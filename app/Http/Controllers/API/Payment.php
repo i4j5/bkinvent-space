@@ -9,8 +9,6 @@ use Illuminate\Support\Carbon;
 class Payment extends Controller
 {
 
-
-
     public function index(Request $request)
     {
 
