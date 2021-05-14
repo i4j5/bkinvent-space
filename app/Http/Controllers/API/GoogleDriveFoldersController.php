@@ -282,8 +282,6 @@ class GoogleDriveFoldersController extends Controller
                     break;
                 default: break;
             }
-
-            $arr = explode("?id=", $field['values'][0]['value']);
                     
             if ( isset($arr[1]) ) {
                 $folder_id = $arr[1];
