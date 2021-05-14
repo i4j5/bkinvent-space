@@ -31,8 +31,8 @@ Route::delete('payment/{id}', 'API\Payment@destroy');
 
 Route::post('add-google-calendar-event', 'API\AddGoogleCalendarEventController');
 
-Route::get('webhook/amocrm-closing-lead', 'Webhooks\AmoCRMClosingLeadController');
 
+Route::post('webhook/amocrm-closing-lead', 'Webhooks\AmoCRMClosingLeadController');
 
 Route::post('google-drive/create-project-folder', 'API\GoogleDriveFoldersController@CreateProjectFolder');
 // Route::get('google-drive/create-client-folder', 'API\GoogleDriveFoldersController@CreateСlientFolder');

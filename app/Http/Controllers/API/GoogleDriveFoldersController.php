@@ -77,7 +77,6 @@ class GoogleDriveFoldersController extends Controller
         $amoCRMClientFolderGoogleDriveProjects = null;
 
 
-
         if ($client) {
 
             foreach ($clientFields as $field) {
@@ -271,14 +270,23 @@ class GoogleDriveFoldersController extends Controller
         $folder_id = null;
 
         foreach ($custom_fields as $field) {
+
+            $arr = [];
+
             switch ($field['id']) {
                 case '509695': 
-                    $folder_id = explode("?id=", $field['values'][0]['value'])[1]; 
+                    $arr = explode("?id=", $field['values'][0]['value']); 
                     break;
                 case '509703': 
-                    $folder_id = explode("?id=", $field['values'][0]['value'])[1]; 
+                    $arr = explode("?id=", $field['values'][0]['value']); 
                     break;
                 default: break;
+            }
+
+            $arr = explode("?id=", $field['values'][0]['value']);
+                    
+            if ( isset($arr[1]) ) {
+                $folder_id = $arr[1];
             }
         }
 
@@ -312,7 +320,12 @@ class GoogleDriveFoldersController extends Controller
         foreach ($custom_fields as $field) {
             switch ($field['id']) {
                 case '75429': 
-                    $folder_id = explode("?id=", $field['values'][0]['value'])[1]; 
+                    $arr = explode("?id=", $field['values'][0]['value']);
+                    
+                    if ( isset($arr[1]) ) {
+                        $folder_id = $arr[1];
+                    }
+
                     break;
                 case '509647':
                     $fshortcut_id = $field['values'][0]['value'];

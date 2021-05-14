@@ -57,27 +57,29 @@ class AmoCRMClosingLeadController extends Controller
 
         $lead = $this->api->execute("/api/v4/leads/$lead_id");
 
-
         $custom_fields = [];
-        foreach ($lead->custom_fields_values as $field) {
-            $custom_fields[$field->field_id] = [
-                'code' => $field->field_code,
-                'type' => $field->field_type,
-                'values' => $field->values,
-            ];
+
+        if ($lead->custom_fields_values) {
+            foreach ($lead->custom_fields_values as $field) {
+                $custom_fields[$field->field_id] = [
+                    'code' => $field->field_code,
+                    'type' => $field->field_type,
+                    'values' => $field->values,
+                ];
+            }
         }
 
-        $send_in_resuscitation = false;
+        $send_in_resuscitation = true;
 
         if ( isset($custom_fields[$resuscitation_id]) and !!($custom_fields[$resuscitation_id]['values'][0]->value) ) {
-            $send_in_resuscitation = true;
+            $send_in_resuscitation = false;
         }
 
         if ($send_in_resuscitation) {
             $this->CheckingClosing($lead);
         }
 
-        return 'ok';
+        return $send_in_resuscitation;
     }
 
     /**
@@ -86,21 +88,22 @@ class AmoCRMClosingLeadController extends Controller
     private function CheckingClosing($lead)
     {
         $loss_reasons_ids = [
-            //4074595, // Дубль
-            //5250691, // Не клиент -- Не лид
-            //4105564, // Некорректный лид -- Убрать. Замена НЕ ЛИД
-            //4105519, // Ошибочное обращение -- ?
-            4074598, // Не дозвонились (лид) -- Убрать заменить на НЕ БЕРЕТ ТРУБКУ
-            //4074592, // Не квалифицирован -- ?
-            4071649, // Слишком дорого -- с
-            //4074610, // Дорого в глобальном смысле --Убрать заменить на ДОРОГО/НЕТ ДЕНЕГ
-            4071655, // Не устроили условия -- ?
-            4071652, // Пропала потребность -- Убрать. Замена НЕ АКТУАЛЬНО/ВОЗМОЖНО ПОЗЖЕ
+            //4074595, // Дубль  
+            4074598, // Не берёт трубку
+            4071649, // Дорого/Нет денег  
+            5297755, // Нет реакции на КП
+            7398154, // Думаю  
+            //5250691, // Не лид  
+            //4105564, // Невалидный лид  
+            //4074592, // Дисквалификация
+            4071652, // Не актуально/Возможно позже  
             //4074607, // Выбрал конкурентов
-            //4074601, // Выбрал другой продукт --?
-            //4104691, // Спам
-            5297755, // Нет реакции на кп
-            //5347657, // Не смогли выполнить производство // -- ВОЗВРАТ
+            //5347657, // Возврат  
+            //4104691, // Спам  
+            //4105519, // _Ошибочное обращение
+            //4074610, // _Дорого в глобальном смысле  
+            //4074601, // _Выбрал другой продукт
+            //4071655, // _Не устроили условия
         ];
         
         if ( in_array($lead->loss_reason_id, $loss_reasons_ids) ) {
