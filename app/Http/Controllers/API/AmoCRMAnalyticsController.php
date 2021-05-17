@@ -18,8 +18,8 @@ class AmoCRMAnalyticsController extends Controller
 
     public function NewLeads(Request $request) {
 
-        $created_from = '10.05.2021';
-        $created_to = '16.05.2021';
+        $created_from = $request->input('created_from');
+        $created_to = $request->input('created_to');
 
         $created_at = [
             'from' => strtotime($created_from),
