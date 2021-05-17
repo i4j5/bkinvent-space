@@ -31,10 +31,16 @@ Route::delete('payment/{id}', 'API\Payment@destroy');
 
 Route::post('add-google-calendar-event', 'API\AddGoogleCalendarEventController');
 
-
+// Закрытие сделок
 Route::post('webhook/amocrm-closing-lead', 'Webhooks\AmoCRMClosingLeadController');
 
+// Создание папок
 Route::post('google-drive/create-project-folder', 'API\GoogleDriveFoldersController@CreateProjectFolder');
 // Route::get('google-drive/create-client-folder', 'API\GoogleDriveFoldersController@CreateСlientFolder');
 Route::post('google-drive/rename-project-folder', 'API\GoogleDriveFoldersController@RenameProjectFolder');
 Route::post('google-drive/rename-client-folder', 'API\GoogleDriveFoldersController@RenameСlientFolder');
+
+
+// Аналитика
+Route::get('amocrm-analytics/new-leads', 'API\AmoCRMAnalyticsController@NewLeads');
+Route::get('amocrm-analytics/closed-leads', 'API\AmoCRMAnalyticsController@ClosedLeads');
