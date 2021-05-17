@@ -66,11 +66,11 @@ class AmoCRMAnalyticsController extends Controller
     public function ClosedLeads(Request $request) {
 
 
-        $created_from = '19.04.2021';
-        $created_to = '25.04.2021';
+        $created_from = $request->input('created_from');
+        $created_to = $request->input('created_to');
 
-        $closed_from = '19.04.2021';
-        $closed_to = '16.05.2021';
+        $closed_from = $request->input('closed_from');
+        $closed_to = $request->input('closed_to');
 
         $created_at = [
             'from' => strtotime($created_from),
