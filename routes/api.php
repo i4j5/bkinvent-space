@@ -43,4 +43,7 @@ Route::post('google-drive/rename-client-folder', 'API\GoogleDriveFoldersControll
 
 // Аналитика
 Route::post('amocrm-analytics/new-leads', 'API\AmoCRMAnalyticsController@NewLeads');
+Route::post('amocrm-analytics/active-leads', 'API\AmoCRMAnalyticsController@ActiveLeads');
+Route::post('amocrm-analytics/production-leads', 'API\AmoCRMAnalyticsController@ProductionLeads');
 Route::post('amocrm-analytics/closed-leads', 'API\AmoCRMAnalyticsController@ClosedLeads');
+Route::get('amocrm-analytics/leads', 'API\AmoCRMAnalyticsController@Leads');
