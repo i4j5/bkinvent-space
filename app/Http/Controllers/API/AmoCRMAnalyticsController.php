@@ -61,6 +61,8 @@ class AmoCRMAnalyticsController extends Controller
 
         }
 
+        $leads = $this->RemoveTrash($leads);
+
         $all_price = 0;
         $cost_price = 0;
         $paid = 0;
@@ -151,6 +153,8 @@ class AmoCRMAnalyticsController extends Controller
             }
 
         }
+
+        $leads = $this->RemoveTrash($leads);
 
         $all_price = 0;
         $cost_price = 0;
@@ -309,6 +313,8 @@ class AmoCRMAnalyticsController extends Controller
 
         }
 
+        $leads = $this->RemoveTrash($leads);
+
         $all_price = 0;
         $cost_price = 0;
         $paid = 0;
@@ -400,6 +406,8 @@ class AmoCRMAnalyticsController extends Controller
             }
 
         }
+
+        $leads = $this->RemoveTrash($leads);
 
         $all_price = 0;
         $cost_price = 0;
@@ -653,5 +661,22 @@ class AmoCRMAnalyticsController extends Controller
             ],
             'data' => $users
         ]);
+    }
+
+
+    private function RemoveTrash($leads) {
+
+        foreach ($leads as $id => $lead) {
+            // 4074595// Дубль
+            // 4104691// Спам
+            if (isset($lead->loss_reason_id)) {
+                if ($lead->loss_reason_id == 4104691 or $lead->loss_reason_id == 4074595) {
+                    unset($leads[$id]);
+                }
+            }
+        }
+
+        return $leads;
+
     }
 }
