@@ -7,11 +7,6 @@ use Illuminate\Http\Request;
 use App\Actions\AmoCRM\RequestActions;
 
 
-///
-use App\Actions\GetUserGoogleClientActions;
-use App\Models\User;
-///
-
 class AmoCRMClosingLeadController extends Controller
 {
 

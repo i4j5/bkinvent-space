@@ -40,10 +40,23 @@ Route::post('google-drive/create-project-folder', 'API\GoogleDriveFoldersControl
 Route::post('google-drive/rename-project-folder', 'API\GoogleDriveFoldersController@RenameProjectFolder');
 Route::post('google-drive/rename-client-folder', 'API\GoogleDriveFoldersController@RenameСlientFolder');
 
-
 // Аналитика
 Route::post('amocrm-analytics/new-leads', 'API\AmoCRMAnalyticsController@NewLeads');
 Route::post('amocrm-analytics/active-leads', 'API\AmoCRMAnalyticsController@ActiveLeads');
 Route::post('amocrm-analytics/production-leads', 'API\AmoCRMAnalyticsController@ProductionLeads');
 Route::post('amocrm-analytics/closed-leads', 'API\AmoCRMAnalyticsController@ClosedLeads');
 Route::get('amocrm-analytics/leads', 'API\AmoCRMAnalyticsController@Leads');
+
+// Сайты
+Route::prefix('site')->group(function () {
+
+    // Создание заявки
+    Route::post('create-lead-from-form', 'API\SiteController@createLeadFromForm'); 
+    Route::get('create-lead-from-call', 'API\CallTrackerController@createCall');
+
+    // Сбор данных по визитам сайта
+    Route::prefix('visitor')->group(function () {
+        Route::post('create', 'API\VisitorController@create');
+        Route::post('update', 'API\VisitorController@update');
+    });
+});
