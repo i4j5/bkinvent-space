@@ -57,7 +57,33 @@ class AddLead
         $lead_custom_fields_values = [];
 
         $lead_custom_fields_values[] = [
+            'field_id' => '173485',
+            'values' => [
+                '0' => [
+                    'value' => $data['visit']
+                ]
+            ]
+        ];
+
+        $lead_custom_fields_values[] = [
+            'field_id' => '345423',
+            'values' => [
+                '0' => [
+                    'value' => $data['landing_page']
+                ]
+            ]
+        ];
+
+        $lead_custom_fields_values[] = [
             'field_code' => 'UTM_SOURCE',
+            'values' => [
+                '0' => [
+                    'value' => $data['utm_source']
+                ]
+            ]
+        ];
+        $lead_custom_fields_values[] = [
+            'field_id' => '75455',
             'values' => [
                 '0' => [
                     'value' => $data['utm_source']
@@ -73,9 +99,25 @@ class AddLead
                 ]
             ]
         ];
+        $lead_custom_fields_values[] = [
+            'field_id' => '75457',
+            'values' => [
+                '0' => [
+                    'value' => $data['utm_medium']
+                ]
+            ]
+        ];
 
         $lead_custom_fields_values[] = [
             'field_code' => 'UTM_CAMPAIGN',
+            'values' => [
+                '0' => [
+                    'value' => $data['utm_campaign']
+                ]
+            ]
+        ];
+        $lead_custom_fields_values[] = [
+            'field_id' => '75461',
             'values' => [
                 '0' => [
                     'value' => $data['utm_campaign']
@@ -91,9 +133,25 @@ class AddLead
                 ]
             ]
         ];
+        $lead_custom_fields_values[] = [
+            'field_id' => '75453',
+            'values' => [
+                '0' => [
+                    'value' => $data['utm_term']
+                ]
+            ]
+        ];
 
         $lead_custom_fields_values[] = [
             'field_code' => 'UTM_CONTENT',
+            'values' => [
+                '0' => [
+                    'value' => $data['utm_content']
+                ]
+            ]
+        ];
+        $lead_custom_fields_values[] = [
+            'field_id' => '75459',
             'values' => [
                 '0' => [
                     'value' => $data['utm_content']
@@ -118,9 +176,25 @@ class AddLead
                 ]
             ]
         ];
+        $lead_custom_fields_values[] = [
+            'field_id' => '75465',
+            'values' => [
+                '0' => [
+                    'value' => $data['referrer']
+                ]
+            ]
+        ];
 
         $lead_custom_fields_values[] = [
             'field_code' => '_YM_UID',
+            'values' => [
+                '0' => [
+                    'value' => $data['metrika_client_id']
+                ]
+            ]
+        ];
+        $lead_custom_fields_values[] = [
+            'field_id' => '75469',
             'values' => [
                 '0' => [
                     'value' => $data['metrika_client_id']
@@ -139,6 +213,14 @@ class AddLead
 
         $lead_custom_fields_values[] = [
             'field_code' => 'GCLIENTID',
+            'values' => [
+                '0' => [
+                    'value' => $data['google_client_id']
+                ]
+            ]
+        ];
+        $lead_custom_fields_values[] = [
+            'field_id' => '75467',
             'values' => [
                 '0' => [
                     'value' => $data['google_client_id']
