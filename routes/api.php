@@ -59,4 +59,4 @@ Route::prefix('site')->group(function () {
     });
 });
 
-Route::post('webhook/call-tracker', 'Webhooks\CallTrackerController');
+Route::match(['GET', 'POST'], 'webhook/call-tracker', 'Webhooks\CallTrackerController');

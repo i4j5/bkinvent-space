@@ -15,8 +15,10 @@ class CallTrackerController extends Controller
     public function __invoke(Request $request, AddLead $addLead) 
     {
 
-        $echo = $request->get('zd_echo');
-        if ($echo) exit($echo);
+        if (Request::isMethod('get')) {
+            $echo = $request->get('zd_echo');
+            exit($echo);
+        }
 
         if ($request->event != 'NOTIFY_START') {
             return $request->event;
