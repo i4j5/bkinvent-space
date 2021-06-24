@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\Webhooks;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Visit;
 use App\Models\CallTrackerPhoneNumbers;
 use Illuminate\Support\Carbon;
+use App\Actions\AmoCRM\AddLead;
 
 class CallTrackerController extends Controller
 {
 
-    public function createCall(Request $request) 
+    public function __invoke(Request $request, AddLead $addLead) 
     {
 
         $echo = $request->get('zd_echo');
@@ -64,7 +65,7 @@ class CallTrackerController extends Controller
             $data['utm_source'] = $number->default_source;
         }
 
-        //TODO: Создать сделку
+        return $addLead->execute($data);
         //TODO: Передать звонок в яндекс //sendCallToYandexMetrika
         //TODO: Передать звонок в google //sendCallToGoogleAnalytics
     }

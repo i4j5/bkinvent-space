@@ -11,39 +11,30 @@ use Illuminate\Support\Carbon;
 class VisitorController extends Controller
 {
 
+    private $data = [
+        'metrika_client_id' => '',
+        'google_client_id' => '',
+
+        'amocrm_visitor_uid' => '',
+        
+        'utm_source' => '',
+        'utm_medium' => '',
+        'utm_campaign' => '',
+        'utm_content' => '',
+        'utm_term' => '',
+        'utm_referrer' => '',
+        
+        'landing_page' => '',
+        'referrer' => '',
+        
+        'first_visit' => 0,
+        'visit' => ''
+    ];
+
     public function create(Request $request)
     {
-
-
-        dd( $this->reservationNumber(1) );
-
-
-        $d =  Carbon::now();
-
-        dd( $d->format('Y-m-d H:i:s'), $d->copy()->addSeconds( config('calltracking.track_time') )->format('Y-m-d H:i:s') );
-
-
-
-        $data = [
-            'metrika_client_id' => '',
-            'google_client_id' => '',
-
-            'amocrm_visitor_uid' => '',
-            
-            'utm_source' => '',
-            'utm_medium' => '',
-            'utm_campaign' => '',
-            'utm_content' => '',
-            'utm_term' => '',
-            'utm_referrer' => '',
-            
-            'landing_page' => '',
-            'referrer' => '',
-            
-            'first_visit' => 0
-        ];
-
-        $data = array_merge($data, array_intersect_key($request->json(), $data));
+        
+        $data = $this->mergeData($request->all());
 
         $visit = Visit::create($data);
 
@@ -53,10 +44,11 @@ class VisitorController extends Controller
         } 
 
         $phone = false;
-        // TODO: Оптимизировать
+
         if ($data['referrer'] || $data['utm_source']) {
-            // Получаем телефон
             $phone = $this->reservationNumber($visit->id);
+        } else {
+            $phone = $this->reservationNumber(0);
         }
         
         return [
@@ -70,7 +62,10 @@ class VisitorController extends Controller
 
     public function update(Request $request)
     {
-        $visit_id = $request->json('visit');
+
+        $data = $this->mergeData($request->all());
+
+        $visit_id = $data['visit'];
 
         $visit = Visit::find($visit_id);
 
@@ -78,9 +73,9 @@ class VisitorController extends Controller
             return ['error' => ''];
         }
 
-        if (!$visit->google_client_id) $visit->google_client_id = $request->json('google_client_id');
-        if (!$visit->metrika_client_id) $visit->metrika_client_id = $request->json('metrika_client_id');
-        if (!$visit->amocrm_visitor_uid) $visit->amocrm_visitor_uid = $request->json('amocrm_visitor_uid');
+        if (!$visit->google_client_id) $visit->google_client_id = $data['google_client_id'];
+        if (!$visit->metrika_client_id) $visit->metrika_client_id = $data['metrika_client_id'];
+        if (!$visit->amocrm_visitor_uid) $visit->amocrm_visitor_uid = $data['amocrm_visitor_uid'];
 
         $visit->save();
 
@@ -88,6 +83,8 @@ class VisitorController extends Controller
 
         if ($visit->referrer || $visit->utm_source) {
             $phone = $this->reservationNumber($visit->id);
+        } else {
+            $phone = $this->reservationNumber(0);
         }
 
         return [
@@ -99,31 +96,46 @@ class VisitorController extends Controller
         ];
     }
 
-    private function reservationNumber($visit_id)
-    {
-        if (!$visit_id) {
-            return false;
+    private function mergeData($data) {
+        
+        $_data = array_merge($this->data, array_intersect_key($data, $this->data));
+        $_data = array_merge($_data , array_intersect_key($data['utm'], $this->data));
+
+        foreach ($_data as $index => $value) {
+            if ($value === null){
+                $_data[$index] = '';
+            }
         }
 
-        $now = Carbon::now();
-        
-        $number = CallTrackerPhoneNumbers::where('visit_id', $visit_id)->first();
+        return $_data;
+    }
 
-        //TODO: Проверить сессию
-        
-        if (!$number) {
-            $number = CallTrackerPhoneNumbers::where([['reservation_at', '<', $now], ['static', '=', 0]])->first();
+    private function reservationNumber($visit_id)
+    {
+        $now = Carbon::now();
+        $number = null;
+        $reservation_at = $now->copy()->addSeconds(env('CALL_TRACKER_TRACK_TIME'))->format('Y-m-d H:i:s');
+
+        if ($visit_id) {
+            $number = CallTrackerPhoneNumbers::where('visit_id', $visit_id)->first();
+
+            if (!$number) {
+                $number = CallTrackerPhoneNumbers::where([['reservation_at', '<', $now], ['static', '=', 0]])->first();
+            }
         }
 
         if ($number) {
-            $reservation_at = $now->copy()->addSeconds(config('calltracking.track_time'))->format('Y-m-d H:i:s');
-            
             $number->reservation_at = $reservation_at;
             $number->visit_id = $visit_id;
             $number->save();
 
             return [
                 'number' => $number->number,
+                'ttl' => $reservation_at,
+            ];
+        } else {
+            return [
+                'number' => env('CALL_TRACKER_DEFAULT_NUMBER'),
                 'ttl' => $reservation_at,
             ];
         }

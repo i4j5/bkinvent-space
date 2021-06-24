@@ -1,5 +1,6 @@
 const mix = require('laravel-mix');
-
+require('dotenv').config();
+let webpack = require('webpack');
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -11,6 +12,22 @@ const mix = require('laravel-mix');
  |
  */
 
+let dotenvplugin = new webpack.DefinePlugin({
+    'process.env': {
+        APP_URL: JSON.stringify(process.env.APP_URL),
+        CALL_TRACKER_CSS_CLASS: JSON.stringify(process.env.CALL_TRACKER_CSS_CLASS),
+        CALL_TRACKER_MASK: JSON.stringify(process.env.CALL_TRACKER_MASK),
+        CALL_TRACKER_TRACK_TIME: JSON.stringify(process.env.CALL_TRACKER_TRACK_TIME),
+        CALL_TRACKER_DEFAULT_NUMBER: JSON.stringify(process.env.CALL_TRACKER_DEFAULT_NUMBER),
+    }
+});
+
+mix.webpackConfig({
+    plugins: [
+        dotenvplugin,
+    ]
+});
+
 mix.js('resources/js/app.js', 'public/js')
     .postCss('resources/css/app.css', 'public/css', [
         require('postcss-import'),
@@ -18,6 +35,9 @@ mix.js('resources/js/app.js', 'public/js')
         require('autoprefixer'),
     ]);
 
+mix.js('resources/js/visit-tracker.js', 'public/js')
+
 if (mix.inProduction()) {
     mix.version();
 }
+

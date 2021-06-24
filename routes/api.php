@@ -28,7 +28,6 @@ Route::post('payment', 'API\Payment@store');
 Route::get('payment/{id}', 'API\Payment@show');
 Route::delete('payment/{id}', 'API\Payment@destroy');
 
-
 Route::post('add-google-calendar-event', 'API\AddGoogleCalendarEventController');
 
 // Закрытие сделок
@@ -51,8 +50,7 @@ Route::get('amocrm-analytics/leads', 'API\AmoCRMAnalyticsController@Leads');
 Route::prefix('site')->group(function () {
 
     // Создание заявки
-    Route::post('create-lead-from-form', 'API\SiteController@createLeadFromForm'); 
-    Route::get('create-lead-from-call', 'API\CallTrackerController@createCall');
+    Route::post('create-lead', 'API\SiteController@createLead'); 
 
     // Сбор данных по визитам сайта
     Route::prefix('visitor')->group(function () {
@@ -60,3 +58,5 @@ Route::prefix('site')->group(function () {
         Route::post('update', 'API\VisitorController@update');
     });
 });
+
+Route::post('webhook/call-tracker', 'Webhooks\CallTrackerController');
