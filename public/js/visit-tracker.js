@@ -64,7 +64,7 @@ function init(options) {
     setCookie("".concat(prefix, "visit"), data.visit, track_time);
   }
 
-  if (document.referrer && document.referrer.split('/')[2] != window.location.hostname) {
+  if (document.referrer && document.referrer.split('/')[2].split(':')[0] != window.location.hostname) {
     data.referrer = setLocalStorage("".concat(prefix, "referrer"), document.referrer);
     setLocalStorage("".concat(prefix, "utm"), '');
     data.landing_page = setLocalStorage("".concat(prefix, "landing_page"), document.location.hostname + document.location.pathname);

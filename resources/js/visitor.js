@@ -50,7 +50,7 @@ export default function init(options) {
         setCookie(`${prefix}visit`, data.visit, track_time)
     }
 
-    if (document.referrer && (document.referrer.split('/')[2] != window.location.hostname)) {
+    if (document.referrer && (document.referrer.split('/')[2].split(':')[0] != window.location.hostname)) {
         data.referrer = setLocalStorage(`${prefix}referrer`, document.referrer)
         setLocalStorage(`${prefix}utm`, '')
         data.landing_page = setLocalStorage(`${prefix}landing_page`, document.location.hostname + document.location.pathname)
@@ -98,6 +98,7 @@ export default function init(options) {
            data.utm.utm_referrer = search.split('utm_referrer=')[1].split('&')[0]
 
         setLocalStorage(`${prefix}utm`, JSON.stringify(data.utm))
+
     } else {
         let utm = getLocalStorage(`${prefix}utm`)
 
@@ -105,7 +106,7 @@ export default function init(options) {
             data.utm = JSON.parse(utm)
         }
     }
-
+    
     if (data.visit) {
         intervalCheck()
     } else {
