@@ -35,7 +35,12 @@ class SiteController extends Controller
             'ip' => $request->ip()
         ];
 
-        $data = array_merge($default_data, array_intersect_key($request->all(), $default_data));
+        $data = array_merge($request->all(), [
+            'landing_page' => $request->input('url'),
+            'title' => $request->input('order') . '.',
+        ]);
+
+        $data = array_merge($default_data, array_intersect_key($data, $default_data));
 
         return $addLead->execute($data);
 
