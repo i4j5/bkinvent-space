@@ -6,9 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Visit;
 use Illuminate\Support\Carbon;
-use App\Actions\AddLead;
+use App\Actions\AmoCRM\AddLead;
 
-class VisitorController extends Controller
+class SiteController extends Controller
 {
 
     public function createLead(Request $request, AddLead $addLead)
@@ -35,7 +35,7 @@ class VisitorController extends Controller
             'ip' => $request->ip()
         ];
 
-        $data = array_merge($data, array_intersect_key($request->json(), $data));
+        $data = array_merge($default_data, array_intersect_key($request->all(), $default_data));
 
         return $addLead->execute($data);
 
