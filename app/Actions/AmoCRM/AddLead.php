@@ -9,38 +9,37 @@ class AddLead
 
     private $amoCRM;
 
+    private $default_data = [
+        'google_client_id' => '',
+        'metrika_client_id' => '',
+        'metrika_id' => '',
+        'landing_page' => '',
+        'referrer' => '',
+        'utm_medium' => '',
+        'utm_source' =>  '',
+        'utm_campaign' => '',
+        'utm_term' => '',
+        'utm_content' => '',
+        'utm_referrer' => '',
+        'visit' => '',
+        'title' => '',
+        'tags' => [],
+        'amocrm_visitor_uid' => '',
+        'phone' => '',
+        'email' => '',
+        'name' => '',
+        'comment' => '',
+        'ip' => '8.8.8.8',
+    ];
+
     public function __construct() {
         $this->amoCRM = new RequestActions;
     }
 
     public function execute($data = [])
     {
-        $default_data = [
-            'google_client_id' => '',
-            'metrika_client_id' => '',
-            'metrika_id' => '',
-            'landing_page' => '',
-            'referrer' => '',
-            'utm_medium' => '',
-            'utm_source' =>  '',
-            'utm_campaign' => '',
-            'utm_term' => '',
-            'utm_content' => '',
-            'utm_referrer' => '',
-            'visit' => '',
-            'title' => '',
-            'tags' => [],
-            'amocrm_visitor_uid' => '',
-            'phone' => '',
-            'email' => '',
-            'name' => '',
-            'comment' => '',
-            'ip' => '8.8.8.8',
-        ];
 
-        $data = array_merge($default_data, array_intersect_key($data, $default_data));
-
-        $data['phone'] = str_replace(['+', '(', ')', ' ', '-', '_', '*', '–'], '', $data['phone']);
+        $data = $this->mergeData($data);
 
         $contact_id = $this->serchContact( $data['phone'] );
 
@@ -380,5 +379,20 @@ class AddLead
         }
 
         return $contact_id;
+    }
+
+    private function mergeData($data) {
+        
+        $_data = array_merge($this->default_data, array_intersect_key($data, $this->default_data));
+
+        $_data['phone'] = str_replace(['+', '(', ')', ' ', '-', '_', '*', '–'], '', $_data['phone']);
+
+        foreach ($_data as $index => $value) {
+            if (!$value){
+                $_data[$index] = '';
+            } 
+        }
+
+        return $_data;
     }
 }
