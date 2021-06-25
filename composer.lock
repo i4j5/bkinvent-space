@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f49406f3e5e9665b10280908b6aefe8d",
+    "content-hash": "eae52b08f0c9af92c3082624bf2b68eb",
     "packages": [
         {
             "name": "adoy/oauth2",
@@ -49,6 +49,50 @@
                 "source": "https://github.com/adoy/PHP-OAuth2/tree/1.3.0"
             },
             "time": "2015-08-03T19:57:06+00:00"
+        },
+        {
+            "name": "aego/oauth2-yandex",
+            "version": "0.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rakeev/oauth2-yandex.git",
+                "reference": "a61fa07d4c23ea9f8065f952faf4cc6712aea142"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rakeev/oauth2-yandex/zipball/a61fa07d4c23ea9f8065f952faf4cc6712aea142",
+                "reference": "a61fa07d4c23ea9f8065f952faf4cc6712aea142",
+                "shasum": ""
+            },
+            "require": {
+                "league/oauth2-client": "^2.0 || ^1.4",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Aego\\OAuth2\\Client\\Provider\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alexey Rakeev",
+                    "email": "alexey@rakeev.name"
+                }
+            ],
+            "description": "Yandex provider for league/oauth2-client",
+            "support": {
+                "issues": "https://github.com/rakeev/oauth2-yandex/issues",
+                "source": "https://github.com/rakeev/oauth2-yandex/tree/master"
+            },
+            "time": "2018-01-31T06:23:53+00:00"
         },
         {
             "name": "amocrm/oauth2-amocrm",

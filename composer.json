@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "aego/oauth2-yandex": "^0.2.2",
         "amocrm/oauth2-amocrm": "^2.0",
         "asana/asana": "^0.10.1",
         "fideloper/proxy": "^4.4",

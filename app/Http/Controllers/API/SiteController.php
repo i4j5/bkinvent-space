@@ -16,6 +16,7 @@ class SiteController extends Controller
         $default_data = [
             'google_client_id' => '',
             'metrika_client_id' => '',
+            'metrika_id' => env('YANDEX_METRIKA_ID'),
             'landing_page' => '',
             'referrer' => '',
             'utm_medium' => '',

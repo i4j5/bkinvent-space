@@ -17,11 +17,6 @@ Route::get('/', function () {
     return redirect('/login');
 });
 
-Route::get('/t', function () {
-    return view('calltracker');
-});
-
-
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
@@ -33,5 +28,10 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
 
     Route::get('login/asana/callback', 'User\AsanaController@callback')->name('login.asana.callback');
     Route::get('login/amocrm/callback', 'User\AmoCRMController@callback')->name('login.amocrm.callback');
+    Route::get('login/yandex/callback', 'User\YandexController@callback')->name('login.yandex.callback');
+
+    Route::get('/test-ct', function () {
+        return view('calltracker');
+    });
 
 });

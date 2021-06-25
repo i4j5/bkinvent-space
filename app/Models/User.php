@@ -53,6 +53,9 @@ class User extends Authenticatable
         'amocrm_access_token',
         'amocrm_refresh_token',
         'amocrm_expires_in',
+        'yandex_access_token',
+        'yandex_refresh_token',
+        'yandex_expires_in',
     ];
 
     /**
