@@ -21,7 +21,8 @@
         "laravel/tinker": "^2.5",
         "league/oauth2-client": "^2.6",
         "livewire/livewire": "^2.0",
-        "php-curl-class/php-curl-class": "^9.1"
+        "php-curl-class/php-curl-class": "^9.1",
+        "sentry/sentry-laravel": "^2.7"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
