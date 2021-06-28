@@ -89,7 +89,7 @@ class CallTrackerController extends Controller
             $this->sendCallToYandexMetrika([
                 'client_id' => $data['metrika_client_id'],
                 'landing_page' => $data['landing_page'],
-                'phone' => '+'.$data['phone'],
+                'phone' => $data['phone'],
             ]);
         }
 
@@ -146,6 +146,8 @@ class CallTrackerController extends Controller
         $phone = $params['phone'];
         $landing_page = $params['landing_page'];
         $dateTime = time();
+
+        $phone = '+' . str_replace(['+', '(', ')', ' ', '-', '_', '*', '–'], '', $phone);
 
         $fileName = uniqid('call_', true) . '.csv';
         $calls = "StaticCall,ClientId,DateTime,PhoneNumber,URL".PHP_EOL;
