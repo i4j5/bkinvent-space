@@ -3,6 +3,7 @@
 namespace App\Actions\AmoCRM;
 
 use App\Actions\AmoCRM\RequestActions;
+use Illuminate\Support\Facades\Log;
 
 class AddLead
 {
@@ -66,7 +67,7 @@ class AddLead
         ];
 
         $lead_custom_fields_values[] = [
-            'field_id' => 345423,
+            'field_id' => 75451,
             'values' => [
                 '0' => [
                     'value' => $data['landing_page']
@@ -228,7 +229,6 @@ class AddLead
             ]
         ];
 
-
         $tags = [];
 
         foreach ($data['tags'] as $tag) {
@@ -312,6 +312,26 @@ class AddLead
 
         $res = $this->amoCRM->execute('/api/v4/leads/unsorted/forms', 'post', $unsorted_data);
 
+        if (!isset($res->_total_items) or !isset($res->_embedded)) {
+
+            $masege = 'addLead';
+
+            if (isset($res->status)) {
+                $masege .= " status: $res->status \n" ;
+            }
+
+            if ( isset($res->{'validation-errors'}) ) {
+                $masege .= ' validation-errors(serialize): ' . serialize($res->{'validation-errors'}) . "\n";
+                $masege .= ' validation-errors(json_encode): ' . json_encode($res->{'validation-errors'}) . "\n";
+            }
+
+            $masege .= ' unsorted_data(serialize): ' . serialize($unsorted_data) . "\n";
+            $masege .= ' unsorted_data(json_encode): ' . json_encode($unsorted_data) . "\n";
+
+            Log::channel('amocrm')->error($masege);
+
+        }
+
         $unsorted_id = $res->_embedded->unsorted[0]->uid;
         $lead_id = $res->_embedded->unsorted[0]->_embedded->leads[0]->id;
 
@@ -391,6 +411,10 @@ class AddLead
             if (!$value){
                 $_data[$index] = '';
             } 
+        }
+
+        if (gettype($_data['tags']) != 'array') {
+            $_data['tags'] = [];
         }
 
         return $_data;

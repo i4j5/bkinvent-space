@@ -35,11 +35,3 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
     });
 
 });
-
-Route::get('/test', function () {
-    dd (
-        (new App\Actions\AmoCRM\AddLead)->execute([
-            'utm_source' =>  0,
-        ])
-    );
-});
