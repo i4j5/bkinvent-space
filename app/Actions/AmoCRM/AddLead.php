@@ -421,6 +421,10 @@ class AddLead
             $_data['tags'] = [];
         }
 
+        if ( strlen($_data['referrer']) > 255 )  {
+            $_data['referrer'] = substr($_data['referrer'], 0, 250) . '...'; 
+        }
+        
         return $_data;
     }
 }
