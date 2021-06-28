@@ -410,7 +410,11 @@ class AddLead
         foreach ($_data as $index => $value) {
             if (!$value){
                 $_data[$index] = '';
-            } 
+            }
+
+            if (gettype($value) === 'integer') {
+                $_data[$index] = (string) $_data[$index];
+            }
         }
 
         if (gettype($_data['tags']) != 'array') {
