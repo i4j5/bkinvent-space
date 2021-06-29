@@ -421,8 +421,9 @@ class AddLead
             $_data['tags'] = [];
         }
 
-        if ( strlen($_data['referrer']) > 255 )  {
-            $_data['referrer'] = substr($_data['referrer'], 0, 250) . '...'; 
+        if (strlen($_data['referrer']) > 255)  {
+            $parse = parse_url($_data['referrer']);
+            $_data['referrer'] = $parse['host'];
         }
         
         return $_data;
