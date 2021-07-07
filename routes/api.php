@@ -60,3 +60,10 @@ Route::prefix('site')->group(function () {
 });
 
 Route::match(['GET', 'POST'], 'webhook/call-tracker', 'Webhooks\CallTrackerController');
+
+Route::prefix('avito')->group(function () {
+
+    // Создание заявки
+    Route::post('ad-stats', 'API\AvitoController@AdStats'); 
+    Route::get('get-ads', 'API\AvitoController@GetAds'); 
+});
