@@ -81,8 +81,6 @@ class AvitoController extends Controller
         $uniqContacts = 0;
         $uniqFavorites = 0;
 
-        dd($res);
-
         foreach ($res->result->items[0]->stats as $item) {
             $uniqViews += $item->uniqViews;
             $uniqContacts += $item->uniqContacts;
