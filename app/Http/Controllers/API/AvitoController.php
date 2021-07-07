@@ -57,7 +57,7 @@ class AvitoController extends Controller
 
     public function AdStats(Request $request) {
 
-        $id = $request->input('id');
+        $id = (int) $request->input('id');
         $date_from = $request->input('date_from');
         $date_to = $request->input('date_to');
 
@@ -80,6 +80,8 @@ class AvitoController extends Controller
         $uniqViews = 0;
         $uniqContacts = 0;
         $uniqFavorites = 0;
+
+        dd($res);
 
         foreach ($res->result->items[0]->stats as $item) {
             $uniqViews += $item->uniqViews;
