@@ -81,10 +81,12 @@ class AvitoController extends Controller
         $uniqContacts = 0;
         $uniqFavorites = 0;
 
-        foreach ($res->result->items[0]->stats as $item) {
-            $uniqViews += $item->uniqViews;
-            $uniqContacts += $item->uniqContacts;
-            $uniqFavorites += $item->uniqFavorites;
+        if (isset($res->result) and isset($res->result->items)) {
+            foreach ($res->result->items[0]->stats as $item) {
+                $uniqViews += $item->uniqViews;
+                $uniqContacts += $item->uniqContacts;
+                $uniqFavorites += $item->uniqFavorites;
+            }
         }
 
         return [
