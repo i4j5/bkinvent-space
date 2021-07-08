@@ -61,10 +61,14 @@ class AvitoController extends Controller
         $date_from = $request->input('date_from');
         $date_to = $request->input('date_to');
 
+        sleep(10);
+
         $request = new Curl('https://api.avito.ru');
         $request->setHeader('Authorization', 'Bearer ' . $this->token);
         $request->setHeader('Content-Type', 'application/json');
         $user_id = $request->get('/core/v1/accounts/self')->id;
+
+        sleep(5);
 
         $res = $request->post("/stats/v1/accounts/$user_id/items", [
             'itemIds' => [$id],
@@ -76,6 +80,8 @@ class AvitoController extends Controller
                 'uniqFavorites'
             ]
         ]);
+
+        sleep(10);
 
         $uniqViews = 0;
         $uniqContacts = 0;
