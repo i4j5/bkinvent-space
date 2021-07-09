@@ -39,6 +39,93 @@ class AvitoController extends Controller
 
     }
 
+    public function All(Request $request) {
+
+        $intervals = $request->all();
+
+        $request = new Curl('https://api.avito.ru');
+        $request->setHeader('Authorization', 'Bearer ' . $this->token);
+        $request->setHeader('Content-Type', 'application/json');
+
+        $user_id = $request->get('/core/v1/accounts/self')->id;
+
+        $items = [];
+        $ids = [];
+
+        for ($limit=100, $page=1, $run=true; $run; $page++) { 
+
+            $res = $request->get('/core/v1/items', [
+                'per_page' => $limit,
+                'page' => $page
+            ]);
+
+            if ($res) {
+
+                $arr = $res->resources;
+
+                $run = !!(count($arr) == $limit);
+
+                $items = array_merge($items, $arr);
+
+            } else {
+                $run = false;
+            }
+        }
+
+        // dd($items);
+
+
+        $data = [];
+        foreach ($items as $item) {
+    
+            $stats = [];
+            $id = $item->id;
+            foreach ($intervals as $interval) {
+                $res = $request->post("/stats/v1/accounts/$user_id/items", [
+                    'itemIds' => [  $item->id ],
+                    'dateFrom' => $interval['from'],
+                    'dateTo' => $interval['to'],
+                    'fields' => [
+                        'uniqViews',
+                        'uniqContacts',
+                        'uniqFavorites'
+                    ]
+                ]);
+
+                $uniqViews = 0;
+                $uniqContacts = 0;
+                $uniqFavorites = 0;
+
+                if (isset($res->result) and isset($res->result->items)) {
+                    foreach ($res->result->items[0]->stats as $stat) {
+                        $uniqViews += $stat->uniqViews;
+                        $uniqContacts += $stat->uniqContacts;
+                        $uniqFavorites += $stat->uniqFavorites;
+                    }
+                }
+
+                $stats[] = [
+                    'interval' => $interval['from'] . ' - ' . $interval['to'],
+                    'uniqViews' => $uniqViews,
+                    'uniqContacts' => $uniqContacts,
+                    'uniqFavorites' => $uniqFavorites,
+                ];
+
+                sleep(1);
+            }
+
+            $data[] = [
+                'id' => $item->id,
+                'title' => $item->title,
+                'url' => $item->url,
+                'stats' => $stats,
+            ];
+        }
+
+        return $data;
+
+    }
+
     // Получить все объявления
     public function GetAds(Request $request) {
 

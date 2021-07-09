@@ -66,4 +66,5 @@ Route::prefix('avito')->group(function () {
     // Создание заявки
     Route::post('ad-stats', 'API\AvitoController@AdStats'); 
     Route::get('get-ads', 'API\AvitoController@GetAds'); 
+    Route::post('all', 'API\AvitoController@All'); 
 });
