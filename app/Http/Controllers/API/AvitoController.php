@@ -41,7 +41,7 @@ class AvitoController extends Controller
 
     public function All(Request $request) {
 
-        $intervals = $request->all();
+        $intervals = $request->all()['intervals'];
 
         $request = new Curl('https://api.avito.ru');
         $request->setHeader('Authorization', 'Bearer ' . $this->token);
