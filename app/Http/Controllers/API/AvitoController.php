@@ -111,7 +111,7 @@ class AvitoController extends Controller
                     'uniqFavorites' => $uniqFavorites,
                 ];
 
-                sleep(1);
+                // sleep(1);
             }
 
             $data[] = [
