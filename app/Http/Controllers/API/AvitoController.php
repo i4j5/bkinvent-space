@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Curl\Curl;
+use Illuminate\Support\Facades\Storage;
 
 class AvitoController extends Controller
 {
@@ -13,12 +14,28 @@ class AvitoController extends Controller
    
     public function __construct()
     {
-        $request = new Curl();
 
-        $res = $request->get("https://api.avito.ru/token/?grant_type=client_credentials&client_id=" . env('AVITO_CLIENT_ID') . "&client_secret=" .env('AVITO_CLIENT_SECRET'));
+        $file_name = 'json/avito.json';
 
-        $this->token = $res->access_token;
-    
+        if(!Storage::exists($file_name)) {
+            Storage::put($file_name, '');
+        }
+
+        $json = json_decode(Storage::get($file_name), true);
+
+        $time = time();
+
+        if (!$json or ($time > $json['expires_in'])) {
+
+            $request = new Curl();
+            $res = $request->get("https://api.avito.ru/token/?grant_type=client_credentials&client_id=" . env('AVITO_CLIENT_ID') . "&client_secret=" .env('AVITO_CLIENT_SECRET'));
+        
+            $json['access_token'] = $res->access_token;
+            $json['expires_in'] = $time + $res->expires_in;
+            Storage::put($file_name, json_encode($json));
+        }
+
+        $this->token = $json['access_token'];
 
     }
 
@@ -61,14 +78,12 @@ class AvitoController extends Controller
         $date_from = $request->input('date_from');
         $date_to = $request->input('date_to');
 
-        sleep(10);
-
         $request = new Curl('https://api.avito.ru');
         $request->setHeader('Authorization', 'Bearer ' . $this->token);
         $request->setHeader('Content-Type', 'application/json');
         $user_id = $request->get('/core/v1/accounts/self')->id;
 
-        sleep(5);
+        sleep(1);
 
         $res = $request->post("/stats/v1/accounts/$user_id/items", [
             'itemIds' => [$id],
@@ -81,8 +96,6 @@ class AvitoController extends Controller
             ]
         ]);
 
-        sleep(10);
-
         $uniqViews = 0;
         $uniqContacts = 0;
         $uniqFavorites = 0;
@@ -94,6 +107,8 @@ class AvitoController extends Controller
                 $uniqFavorites += $item->uniqFavorites;
             }
         }
+
+        sleep(2);
 
         return [
             'uniqViews' => $uniqViews,
