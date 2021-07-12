@@ -44,7 +44,12 @@ class SerchContactActions
                                 $res = $amoCRM->execute("/api/v4/leads/$lead->id");
 
                                 if (isset($res->id) and $res->id == $lead->id) {
-                                    $leads[] = $res;
+                                    $leads[] = [
+                                        'id' => $res->id,
+                                        'is_deleted' => $res->is_deleted,
+                                        'closed_at' => $res->closed_at,
+                                        'responsible_user_id' => $res->responsible_user_id,
+                                    ];
                                 }
                             }
                         }

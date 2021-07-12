@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/test', function (Request $request) {
 
-    $c = (new App\Actions\AmoCRM\SerchContactActions)->execute('+79044435269');
+    $c = (new App\Actions\AmoCRM\SerchContactActions)->execute('+79085192349');
 
     dd($c);
 });
