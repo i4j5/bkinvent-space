@@ -73,20 +73,20 @@ class CallTrackerController extends Controller
             $data['utm_source'] = $number->default_source;
         }
 
-        $double = flase;
+        $is_double = flase;
 
         $contact = $serchContact->execute($data['phone']);
 
         if ($contact['id']) {
             foreach ($contact['leads'] as $lead) {
                 if (!$lead['is_deleted'] and !$lead['closed_at']) {
-                    $double = true;
+                    $is_double = true;
                 }
             }
         }
 
         $res = null;
-        if (!$double) {
+        if (!$is_double) {
             $res = $addLead->execute($data);
         }
     
