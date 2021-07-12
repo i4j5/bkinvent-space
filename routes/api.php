@@ -17,6 +17,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+Route::get('/test', function (Request $request) {
+
+    $c = (new App\Actions\AmoCRM\SerchContactActions)->execute('+79044435269');
+
+    dd($c);
+});
+
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });

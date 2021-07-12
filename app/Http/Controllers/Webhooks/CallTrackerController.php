@@ -8,6 +8,7 @@ use App\Models\Visit;
 use App\Models\CallTrackerPhoneNumbers;
 use Illuminate\Support\Carbon;
 use App\Actions\AmoCRM\AddLead;
+use App\Actions\AmoCRM\SerchContactActions;
 use Curl\Curl;
 use App\Models\User;
 use App\Actions\Yandex\GetUserYandexTokenActions;
@@ -16,7 +17,7 @@ use Illuminate\Support\Facades\Storage;
 class CallTrackerController extends Controller
 {
 
-    public function __invoke(Request $request, AddLead $addLead) 
+    public function __invoke(Request $request, AddLead $addLead, SerchContactActions $serchContact) 
     {
 
         if ($request->isMethod('get')) {
@@ -72,8 +73,22 @@ class CallTrackerController extends Controller
             $data['utm_source'] = $number->default_source;
         }
 
-        $res = $addLead->execute($data);
-        
+        $double = flase;
+
+        $contact = $serchContact->execute($data['phone']);
+
+        if ($contact['id']) {
+            foreach ($contact['leads'] as $lead) {
+                if (!$lead['is_deleted'] and !$lead['closed_at']) {
+                    $double = true;
+                }
+            }
+        }
+
+        $res = null;
+        if (!$double) {
+            $res = $addLead->execute($data);
+        }
     
         // Отправка звонок в google
         if (isset($data['google_client_id']) && $data['google_client_id']) {
