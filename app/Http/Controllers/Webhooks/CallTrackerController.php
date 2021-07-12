@@ -73,7 +73,7 @@ class CallTrackerController extends Controller
             $data['utm_source'] = $number->default_source;
         }
 
-        $is_double = flase;
+        $is_double = false;
 
         $contact = $serchContact->execute($data['phone']);
 
