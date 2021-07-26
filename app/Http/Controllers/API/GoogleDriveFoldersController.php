@@ -145,8 +145,23 @@ class GoogleDriveFoldersController extends Controller
 
         if (!$clientLink and !$clientProjectsLink) {
             $client_folder = $this->CreateFolder(env('GOOGLE_USERS_FOLDER_ID'), "$client->name #$client->id");
+            $this->AddPermissions($client_folder->id, [
+                'production@bkinvent.net',
+                'sales@bkinvent.net',
+            ]);
+
             $client_folder__projects = $this->CreateFolder($client_folder->id, '1.1 ПРОЕКТЫ');
-            $this->CreateFolder($client_folder->id, '1.2 ДОКУМЕНТЫ');
+            $this->AddPermissions($client_folder__projects->id, [
+                'production@bkinvent.net',
+                'sales@bkinvent.net',
+            ]);
+            
+            $client_folder__docs = $this->CreateFolder($client_folder->id, '1.2 ДОКУМЕНТЫ');
+            $this->AddPermissions($client_folder__docs->id, [
+                'production@bkinvent.net',
+                'sales@bkinvent.net',
+            ]);
+            
             
 
             $clientLink = "https://drive.google.com/open?id=$client_folder->id";
@@ -192,15 +207,49 @@ class GoogleDriveFoldersController extends Controller
         // TODO: Проверка пустые поля или нет!
 
         $project_folder = $this->CreateFolder(env('GOOGLE_PROJECTS_FOLDER_ID'), "$lead->name #$lead->id");
-        $project_folder__1_2 = $this->CreateFolder($project_folder->id, '1.2 ПАПКА МЕНЕДЖЕРА');
-        $project_folder__1_4 = $this->CreateFolder($project_folder->id, '1.4 ИСХОДНЫЕ ДОКУМЕНТЫ');
-        $this->CreateFolder($project_folder->id, '1.5 УСЛУГА');
-        $project_folder__1_3 = $this->CreateFolder($project_folder->id, '1.3 ОБСЛЕДОВАНИЕ ОБЪЕКТА');
-        $this->CreateFolder($project_folder__1_3->id, '1.3.1 ФОТООТЧЁТ');
-        $this->CreateFolder($project_folder__1_3->id, '1.3.2 РЕЗЮМЕ');
+        $this->AddPermissions($project_folder->id, [
+            'production@bkinvent.net',
+            'sales@bkinvent.net',
+        ]);
 
+        $project_folder__1_2 = $this->CreateFolder($project_folder->id, '1.2 ПАПКА МЕНЕДЖЕРА');
+        $this->AddPermissions($project_folder__1_2->id, [
+            'sales@bkinvent.net',
+        ]);
+
+        $project_folder__1_4 = $this->CreateFolder($project_folder->id, '1.4 ИСХОДНЫЕ ДОКУМЕНТЫ');
+        $this->AddPermissions($project_folder__1_4->id, [
+            'production@bkinvent.net',
+            'sales@bkinvent.net',
+        ]);
+        
+        $project_folder__1_5 = $this->CreateFolder($project_folder->id, '1.5 УСЛУГА');
+        $this->AddPermissions($project_folder__1_5->id, [
+            'production@bkinvent.net',
+            'sales@bkinvent.net',
+        ]);
+
+        $project_folder__1_3 = $this->CreateFolder($project_folder->id, '1.3 ОБСЛЕДОВАНИЕ ОБЪЕКТА');
+        $this->AddPermissions($project_folder__1_3->id, [
+            'production@bkinvent.net',
+            'sales@bkinvent.net',
+        ]);
+        
+        $project_folder__1_3_1 = $this->CreateFolder($project_folder__1_3->id, '1.3.1 ФОТООТЧЁТ');
+        $this->AddPermissions($project_folder__1_3_1->id, [
+            'production@bkinvent.net',
+            'sales@bkinvent.net',
+        ]);
+
+        $project_folder__1_3_2 = $this->CreateFolder($project_folder__1_3->id, '1.3.2 РЕЗЮМЕ');
+        $this->AddPermissions($project_folder__1_3_2->id, [
+            'production@bkinvent.net',
+            'sales@bkinvent.net',
+        ]);
+    
 
         $client_fshortcut = $this->CreateShortcut($project_folder->id, $client_folder->id, '1.1 ПАПКА КЛИЕНТА');
+
         $project_fshortcut = $this->CreateShortcut($client_folder__projects->id, $project_folder->id, $project_folder->name);
 
         $lead_data['custom_fields_values'][] = [
@@ -380,5 +429,31 @@ class GoogleDriveFoldersController extends Controller
         $file = new \Google_Service_Drive_DriveFile();
         $file->setName( str_replace('&quot;', '"', $name) );
         return $this->serviceGoogleDrive->files->update($file_id, $file); 
+    }
+
+    private function AddPermissions($file_id, $groups=[]) {
+
+        $permissions = $this->serviceGoogleDrive->permissions->listPermissions($file_id)->permissions;
+
+        $groups[] = 'admin@bkinvent.net';
+
+        // Удалякм все доступы
+        foreach ($permissions as $permission) {
+            if ($permission->role != 'owner') {
+                $this->serviceGoogleDrive->permissions->delete($file_id, $permission->id);
+            }
+        }
+
+        //Добавляем группы 
+        foreach ($groups as $item) {
+            $newPermission= new \Google_Service_Drive_Permission();
+            $newPermission->setType('group');
+            $newPermission->setRole('writer');
+            $newPermission->setEmailAddress($item);
+            $this->serviceGoogleDrive->permissions->create($file_id, $newPermission, [
+                'sendNotificationEmail' => false,
+            ]);
+        }
+
     }
 }
