@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\Asana;
 use App\Models\User;
 use Asana\Client;
 use Asana\Errors\NoAuthorizationError;
@@ -14,6 +14,7 @@ class GetUserAsanaClientActions
         $access_token = $user->asana_access_token;
         $refresh_token = $user->asana_refresh_token;
 
+
         $client;
 
         if ($access_token && $refresh_token) {
@@ -22,7 +23,7 @@ class GetUserAsanaClientActions
                 'client_secret' => env('ASANA_CLIENT_SECRET'),
                 'redirect_uri'  => env('ASANA_REDIRECT_URI'),
                 'token' =>  $access_token,
-                'refresh_token' => $refresh_token
+                'refresh_token' => $refresh_token,
             ));
 
             try {

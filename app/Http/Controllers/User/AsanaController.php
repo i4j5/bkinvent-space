@@ -5,7 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Actions\GetUserAsanaClientActions;
+use App\Actions\Asana\GetUserAsanaClientActions;
 use Illuminate\Support\Facades\Auth;
 use Asana\Client;
 

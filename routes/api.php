@@ -69,9 +69,9 @@ Route::prefix('avito')->group(function () {
     Route::post('all', 'API\AvitoController@All'); 
 });
 
-// Route::prefix('asana')->group(function () {
-//     Route::post('create-deal-project', 'AsanaController@createDealProject');
-//     Route::post('update-deal-project', 'AsanaController@updateDealProject');
-//     Route::any('webhook/{deal_id}/{project_id}', 'AsanaController@webhook');
-//     Route::post('delete-webhook', 'AsanaController@deleteWebhook');
-// });
+Route::prefix('asana')->group(function () {
+    Route::post('create-deal-project', 'API\AsanaController@createDealProject');
+    Route::post('update-deal-project', 'API\AsanaController@updateDealProject');
+    Route::any('webhook/{deal_id}/{project_id}', 'API\AsanaController@webhook');
+    Route::post('delete-webhook', 'API\AsanaController@deleteWebhook');
+});
