@@ -75,3 +75,84 @@ Route::prefix('asana')->group(function () {
     Route::any('webhook/{deal_id}/{project_id}', 'API\AsanaController@webhook');
     Route::post('delete-webhook', 'API\AsanaController@deleteWebhook');
 });
+
+
+
+use App\Actions\Asana\GetUserAsanaClientActions;
+use App\Models\User;
+use \Curl\Curl;
+use Illuminate\Support\Facades\Log;
+Route::get('asana-test',  function (Request $request) {
+
+   
+    $user = User::where('email', env('ROOT_EMAIL'))->first();
+    $client = (new GetUserAsanaClientActions)->execute($user);
+    // $client->options['headers'] = [
+    //     'Asana-Enable' => 'new_user_task_lists'
+    // ];
+
+    $asana = new Curl();
+    $asana->setHeader('Authorization', 'Bearer ' . $client->dispatcher->accessToken);
+    $asana->setHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+    // dd($asana->get('https://app.asana.com/api/1.0/users'));
+
+    $events = $asana->get('https://app.asana.com/api/1.0/events?resource=1109239567482271&sync=52440dd928ca7b6591fc51b9647b89be:70');
+
+    dd($events);
+
+
+});
+
+// use App\Actions\AmoCRM\RequestActions;
+// Route::get('amo-dir',  function () {
+//     $deal_ids = [
+
+//     ];
+
+//     $amoCRM = new RequestActions;
+
+//     $tasks = [];
+
+//     foreach ($deal_ids as $id) {
+
+//         $data = $amoCRM->execute('/api/v4/tasks','get', [
+//             'filter' => [
+//                 'entity_type' => 'leads',
+//                 'entity_id' => $id,
+//                 'is_completed' => 0
+//             ]
+//         ]);
+
+//         if (isset($data->_embedded)) {
+//             $data->_embedded->tasks;
+//             $tasks = array_merge($tasks, $data->_embedded->tasks);
+//         }
+
+//         $lead = $amoCRM->execute('/api/v2/leads', 'get', ['id' => $id])->_embedded->items[0];
+
+//         if (isset($lead->main_contact)) {
+//             $contac_id = $lead->main_contact->id;
+
+
+//             $data = $amoCRM->execute('/api/v4/tasks','get', [
+//                 'filter' => [
+//                     'entity_type' => 'contacts',
+//                     'entity_id' => $contac_id,
+//                     'is_completed' => 0
+//                 ]
+//             ]);
+    
+//             if (isset($data->_embedded)) {
+//                 $data->_embedded->tasks;
+//                 $tasks = array_merge($tasks, $data->_embedded->tasks);
+//             }
+//         }
+//     }
+
+//     foreach ($tasks as $task) {
+//         $amoCRM->execute("/api/v4/tasks/$task->id", 'patch', [
+//             'responsible_user_id' => 6345826
+//         ]);
+//     }
+// });

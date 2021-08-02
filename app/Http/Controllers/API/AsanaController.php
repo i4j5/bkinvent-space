@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Actions\Asana\GetUserAsanaClientActions;
 use \Curl\Curl;
 use App\Actions\AmoCRM\RequestActions;
+use Illuminate\Support\Facades\Log;
 
 class AsanaController extends Controller
 {
@@ -407,8 +408,19 @@ class AsanaController extends Controller
         $asana->setHeader('Authorization', 'Bearer ' . $this->client->dispatcher->accessToken);
         $asana->setHeader('Content-Type', 'application/x-www-form-urlencoded');
         $asana->post('https://app.asana.com/api/1.0/webhooks', [
-            'target' => env('APP_URL') . "/api/asana/webhook/$deal_id/$gid",
+            'target' => 'https://bkinvent.space' . "/api/asana/webhook/$deal_id/$gid",
+            // 'target' => env('APP_URL') . "/api/asana/webhook/$deal_id/$gid",
             'resource' => $gid,
+            // 'filters' => [
+            //     'action'=> [
+            //         'changed',
+            //         'added',
+            //     ],
+            //     'resource_type' => [
+            //         'task',
+            //         'story',
+            //     ]
+            // ], 
         ]);
 
         return 'ok';
@@ -470,7 +482,6 @@ class AsanaController extends Controller
                 isset($event['user']) &&
                 isset($event['user']['gid']) 
             ) {
-                //$user_name = $asana->get('https://app.asana.com/api/1.0/users/' . $event['user']['gid'])->data->name;
                 $user_name = $this->client->users->getUser($event['user']['gid'])->name;
             }
 
@@ -479,44 +490,46 @@ class AsanaController extends Controller
             $change = isset($event['change']) ? $event['change'] : null;
 
             // Перенос задачи в секцию 
-            if (
-                $event['action'] == 'added' && 
-                $event['resource']['resource_type'] == 'task' && 
-                $event['parent']['resource_type'] == 'section'
-            ) {
+            // if (
+            //     $event['action'] == 'added' && 
+            //     $event['resource']['resource_type'] == 'task' && 
+            //     $event['parent']['resource_type'] == 'section'
+            // ) {
+            //     $task = $this->client->tasks->getTask($event['resource']['gid']);
 
-                //$task = $asana->get('https://app.asana.com/api/1.0/tasks/' . $event['resource']['gid']);
-                $task = $this->client->tasks->getTask($event['resource']['gid']);
+            //     $text .= " перенёс задачу «{$task->name}»";
 
-                $text .= " перенёс задачу «{$task->name}»";
+            //     $section = $this->client->sections->getSection($event['parent']['gid']);
 
-                //$section = $asana->get('https://app.asana.com/api/1.0/sections/' . $event['parent']['gid']);
-                $section = $this->client->sections->getSection($event['parent']['gid']);
+            //     $text .= " в секцию «{$section->name}»";
 
-                $text .= " в секцию «{$section->name}»";
-
-                $data_notes = [];
-                $data_notes[] = [
-                    'note_type' => 'invoice_paid',
-                    'params' => [
-                        'text' => $text,
-                        'service' => 'ASANA',
-                        'icon_url' => 'https://bk-invent.ru/images/asana.png',
-                    ]
-                ];
-                $amoCRM->execute("/api/v4/leads/$deal_id/notes", 'post', $data_notes);
-            }
+            //     $data_notes = [];
+            //     $data_notes[] = [
+            //         'note_type' => 'invoice_paid',
+            //         'params' => [
+            //             'text' => $text,
+            //             'service' => 'ASANA',
+            //             'icon_url' => env('APP_URL') . '/storage/asana/crm.png', 
+            //         ]
+            //     ];
+            //     $amoCRM->execute("/api/v4/leads/$deal_id/notes", 'post', $data_notes);
+            // }
 
             // Комментарий добавлен 
             if (
-                $event['action'] == 'added' 
-                && $event['resource']['resource_type'] == 'story'
-                && $event['resource']['resource_subtype'] == 'comment_added'
+                $event['action'] == 'added' && 
+                $event['resource']['resource_type'] == 'story' && 
+                $event['resource']['resource_subtype'] == 'comment_added' &&
+                isset($event['resource']['gid']) &&
+                isset($event['created_at']) &&
+                isset($event['user']['gid']) &&
+                isset($event['parent']['resource_type'])
             ) {
+
+
 
                 $text .= " добавил комментарий";
 
-                // $resource = $asana->get('https://app.asana.com/api/1.0/stories/' . $event['resource']['gid']);
                 $resource = $this->client->stories->getStory($event['resource']['gid']);
 
                 if ($resource->type == 'comment') {
@@ -524,7 +537,6 @@ class AsanaController extends Controller
                 }
 
                 if ($event['parent']['resource_type'] == 'task') {
-                    //$task = $asana->get('https://app.asana.com/api/1.0/tasks/' . $event['parent']['gid']);
                     $task = $this->client->tasks->getTask($event['parent']['gid']);
                     $text .= " к задаче «{$task->name}»";
                 }
@@ -535,7 +547,7 @@ class AsanaController extends Controller
                     'params' => [
                         'text' => $text,
                         'service' => 'ASANA',
-                        'icon_url' => 'https://bk-invent.ru/images/asana.png',
+                        'icon_url' => env('APP_URL') . '/storage/asana/crm.png', 
                     ]
                 ];
                 $amoCRM->execute("/api/v4/leads/$deal_id/notes", 'post', $data_notes);
@@ -543,9 +555,17 @@ class AsanaController extends Controller
 
             // Задача закрыта
             if (isset($change['field'])) {
-                if ($change['field'] == 'completed' && $event['resource']['resource_type'] == 'task') {
+                if (
+                    $change['field'] == 'completed' &&
+                    $event['resource']['resource_type'] == 'task' &&
+                    // $event['action'] == 'added' && 
+                    $event['resource']['resource_subtype'] == 'comment_added' &&
+                    isset($event['resource']['gid']) &&
+                    isset($event['created_at']) &&
+                    isset($event['user']['gid']) &&
+                    isset($event['parent']['resource_type'])
+                ) {
 
-                    // $resource = $asana->get('https://app.asana.com/api/1.0/tasks/' . $event['resource']['gid']);
                     $resource = $this->client->tasks->getTask($event['resource']['gid']);
     
                     $text .= " закрыл задачу «{$resource->name}»";
@@ -556,7 +576,7 @@ class AsanaController extends Controller
                         'params' => [
                             'text' => $text,
                             'service' => 'ASANA',
-                            'icon_url' => 'https://bk-invent.ru/images/asana.png',
+                            'icon_url' => env('APP_URL') . '/storage/asana/crm.png', 
                         ]
                     ];
                     $amoCRM->execute("/api/v4/leads/$deal_id/notes", 'post', $data_notes);
@@ -565,6 +585,8 @@ class AsanaController extends Controller
 
             usleep(20);
         }
+
+        Log::channel('asana-webhooks')->info(implode(',', $request->all()));
 
         return 'ok';
     }

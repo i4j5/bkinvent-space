@@ -52,6 +52,11 @@ return [
             'path' => storage_path('logs/amocrm.log'),
             'level' => env('LOG_LEVEL', 'debug'),
         ],
+        'asana-webhooks' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/asana-webhooks.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
 
         'daily' => [
             'driver' => 'daily',
