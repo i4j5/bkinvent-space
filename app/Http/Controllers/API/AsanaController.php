@@ -586,7 +586,7 @@ class AsanaController extends Controller
             usleep(20);
         }
 
-        Log::channel('asana-webhooks')->info(implode(',', $request->all()));
+        Log::channel('asana-webhooks')->info($response->content());
 
         return 'ok';
     }
