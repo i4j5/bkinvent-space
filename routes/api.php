@@ -76,34 +76,6 @@ Route::prefix('asana')->group(function () {
     Route::post('delete-webhook', 'API\AsanaController@deleteWebhook');
 });
 
-
-
-use App\Actions\Asana\GetUserAsanaClientActions;
-use App\Models\User;
-use \Curl\Curl;
-use Illuminate\Support\Facades\Log;
-Route::get('asana-test',  function (Request $request) {
-
-   
-    $user = User::where('email', env('ROOT_EMAIL'))->first();
-    $client = (new GetUserAsanaClientActions)->execute($user);
-    // $client->options['headers'] = [
-    //     'Asana-Enable' => 'new_user_task_lists'
-    // ];
-
-    $asana = new Curl();
-    $asana->setHeader('Authorization', 'Bearer ' . $client->dispatcher->accessToken);
-    $asana->setHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-    // dd($asana->get('https://app.asana.com/api/1.0/users'));
-
-    $events = $asana->get('https://app.asana.com/api/1.0/events?resource=1109239567482271&sync=52440dd928ca7b6591fc51b9647b89be:70');
-
-    dd($events);
-
-
-});
-
 // use App\Actions\AmoCRM\RequestActions;
 // Route::get('amo-dir',  function () {
 //     $deal_ids = [

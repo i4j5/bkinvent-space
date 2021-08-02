@@ -8,7 +8,6 @@ use App\Models\User;
 use App\Actions\Asana\GetUserAsanaClientActions;
 use \Curl\Curl;
 use App\Actions\AmoCRM\RequestActions;
-use Illuminate\Support\Facades\Log;
 
 class AsanaController extends Controller
 {
@@ -53,6 +52,13 @@ class AsanaController extends Controller
 
         if ($deal->custom_fields_values) {
             foreach ($deal->custom_fields_values as $field) {
+
+                if ((int) $field->field_id == 518607) {
+                    if ($field->values[0]->value != '') {
+                        $description .= "\n";
+                        $description .= "Дата сдачи по договору: {$field->values[0]->value}";
+                    }
+                }
 
                 if ((int) $field->field_id == 329647) {
                     if ($field->values[0]->value != '') {
@@ -324,7 +330,6 @@ class AsanaController extends Controller
 
             $description = $project->notes;
 
-            //$tasks = $this->client->tasks->getTasksForProject($gid);
             $tasks = $asana->get("https://app.asana.com/api/1.0/projects/$gid/tasks")->data;
 
         } else if ($type == 'task') {
@@ -404,24 +409,13 @@ class AsanaController extends Controller
 
         // TODO: проверить есть ли вебхук с $deal_id
         // Подписать на события
-        $asana = new Curl();
-        $asana->setHeader('Authorization', 'Bearer ' . $this->client->dispatcher->accessToken);
-        $asana->setHeader('Content-Type', 'application/x-www-form-urlencoded');
-        $asana->post('https://app.asana.com/api/1.0/webhooks', [
-            'target' => 'https://bkinvent.space' . "/api/asana/webhook/$deal_id/$gid",
-            // 'target' => env('APP_URL') . "/api/asana/webhook/$deal_id/$gid",
-            'resource' => $gid,
-            // 'filters' => [
-            //     'action'=> [
-            //         'changed',
-            //         'added',
-            //     ],
-            //     'resource_type' => [
-            //         'task',
-            //         'story',
-            //     ]
-            // ], 
-        ]);
+        // $asana = new Curl();
+        // $asana->setHeader('Authorization', 'Bearer ' . $this->client->dispatcher->accessToken);
+        // $asana->setHeader('Content-Type', 'application/x-www-form-urlencoded');
+        // $asana->post('https://app.asana.com/api/1.0/webhooks', [
+        //     'target' => env('APP_URL') . "/api/asana/webhook/$deal_id/$gid",
+        //     'resource' => $gid,
+        // ]);
 
         return 'ok';
     }
@@ -490,30 +484,30 @@ class AsanaController extends Controller
             $change = isset($event['change']) ? $event['change'] : null;
 
             // Перенос задачи в секцию 
-            // if (
-            //     $event['action'] == 'added' && 
-            //     $event['resource']['resource_type'] == 'task' && 
-            //     $event['parent']['resource_type'] == 'section'
-            // ) {
-            //     $task = $this->client->tasks->getTask($event['resource']['gid']);
+            if (
+                $event['action'] == 'added' && 
+                $event['resource']['resource_type'] == 'task' && 
+                $event['parent']['resource_type'] == 'section'
+            ) {
+                $task = $this->client->tasks->getTask($event['resource']['gid']);
 
-            //     $text .= " перенёс задачу «{$task->name}»";
+                $text .= " перенёс задачу «{$task->name}»";
 
-            //     $section = $this->client->sections->getSection($event['parent']['gid']);
+                $section = $this->client->sections->getSection($event['parent']['gid']);
 
-            //     $text .= " в секцию «{$section->name}»";
+                $text .= " в секцию «{$section->name}»";
 
-            //     $data_notes = [];
-            //     $data_notes[] = [
-            //         'note_type' => 'invoice_paid',
-            //         'params' => [
-            //             'text' => $text,
-            //             'service' => 'ASANA',
-            //             'icon_url' => env('APP_URL') . '/storage/asana/crm.png', 
-            //         ]
-            //     ];
-            //     $amoCRM->execute("/api/v4/leads/$deal_id/notes", 'post', $data_notes);
-            // }
+                $data_notes = [];
+                $data_notes[] = [
+                    'note_type' => 'invoice_paid',
+                    'params' => [
+                        'text' => $text,
+                        'service' => 'ASANA',
+                        'icon_url' => env('APP_URL') . '/storage/asana/crm.png', 
+                    ]
+                ];
+                $amoCRM->execute("/api/v4/leads/$deal_id/notes", 'post', $data_notes);
+            }
 
             // Комментарий добавлен 
             if (
@@ -585,8 +579,6 @@ class AsanaController extends Controller
 
             usleep(20);
         }
-
-        Log::channel('asana-webhooks')->info($response->content());
 
         return 'ok';
     }
