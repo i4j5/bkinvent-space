@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Actions\Asana\GetUserAsanaClientActions;
 use \Curl\Curl;
 use App\Actions\AmoCRM\RequestActions;
+use Illuminate\Support\Carbon;
 
 class AsanaController extends Controller
 {
@@ -56,7 +57,8 @@ class AsanaController extends Controller
                 if ((int) $field->field_id == 518607) {
                     if ($field->values[0]->value != '') {
                         $description .= "\n";
-                        $description .= "Дата сдачи по договору: {$field->values[0]->value}";
+                        $date =  (new Carbon($field->values[0]->value))->format('Y-m-d');
+                        $description .= "Дата сдачи по договору: $date";
                     }
                 }
 
