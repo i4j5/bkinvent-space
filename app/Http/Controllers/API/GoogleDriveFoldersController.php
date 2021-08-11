@@ -241,11 +241,11 @@ class GoogleDriveFoldersController extends Controller
             'sales@bkinvent.net',
         ]);
 
-        $project_folder__1_3_2 = $this->CreateFolder($project_folder__1_3->id, '1.3.2 РЕЗЮМЕ');
-        $this->AddPermissions($project_folder__1_3_2->id, [
-            'production@bkinvent.net',
-            'sales@bkinvent.net',
-        ]);
+        // $project_folder__1_3_2 = $this->CreateFolder($project_folder__1_3->id, '1.3.2 РЕЗЮМЕ');
+        // $this->AddPermissions($project_folder__1_3_2->id, [
+        //     'production@bkinvent.net',
+        //     'sales@bkinvent.net',
+        // ]);
     
 
         $client_fshortcut = $this->CreateShortcut($project_folder->id, $client_folder->id, '1.1 ПАПКА КЛИЕНТА');
